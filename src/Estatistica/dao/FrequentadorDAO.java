@@ -313,10 +313,33 @@ public class FrequentadorDAO implements IFrequentador {
 
         return tabela;
     }
+    
+    public List<InfosTabela> tabelaFrequencia(String campo) {
+        InfosTabela inf = new InfosTabela();
+        List tabela = new ArrayList<>();
+        List<InfosTabela> intervalos=pegarStringIntervalo(campo);
+        double qtdItens=qtdItens(campo);
+        int acumulada=0;
+        
+        
+        
+        for(InfosTabela infT: intervalos){
+            InfosTabela infos=new InfosTabela();            
+            infos.setIntervalo(infT.getIntervalo());
+            infos.setFa(pegarFa(inf, campo,infos.getIntervalo()));
+            infos.setFr(infos.getFa()/qtdItens);
+            infos.setFrPCento(infos.getFr()*100);
+            acumulada+=infos.getFa();
+            infos.setFac(acumulada);
+            infos.setFacPCento((infos.getFac()/qtdItens)*100);
+            tabela.add(infos);
+        }
+        return tabela;
+    }
 
     // tabela de frequencias sobre 1 coluna
     
-    public List<InfosTabela> tabelaFrequenciaIntervalos(String campo,int coluna) {
+    public List<InfosTabela> tabelaFrequenciaIntervalos(String campo) {
         InfosTabela inf = new InfosTabela();
         List tabela = new ArrayList<>();
         double qtdItens=qtdItens(campo);
@@ -442,4 +465,51 @@ public class FrequentadorDAO implements IFrequentador {
         }
         return fa;
     }
+    
+    public int pegarFa(InfosTabela inf,String campo,String info){
+        PreparedStatement stbd = null;
+        ResultSet rs = null;
+        int fa=0;
+        //pegar o menor valor
+        try {
+            stbd = connection.prepareStatement("select COUNT("+campo+") from tb_frequentador "
+                    + "where "+campo+" like '"+info+"'");
+
+            rs = stbd.executeQuery();
+
+            while (rs.next()) {
+                fa=rs.getInt("COUNT("+campo+")");
+
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro na Busca!");
+            throw new RuntimeException(ex);
+        }
+        return fa;
+    }
+    
+    public List<InfosTabela> pegarStringIntervalo(String campo){
+        PreparedStatement stbd = null;
+        ResultSet rs = null;
+        List tabela=new ArrayList<>();
+        //pegar o menor valor
+        try {
+            stbd = connection.prepareStatement("select distinct "+campo+" from tb_frequentador ");
+
+            rs = stbd.executeQuery();
+
+            while (rs.next()) {
+                InfosTabela infos=new InfosTabela();
+                infos.setIntervalo(rs.getString(campo));
+                tabela.add(infos);
+
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro na Busca!");
+            throw new RuntimeException(ex);
+        }
+        
+        return tabela;
+    }
+    
 }

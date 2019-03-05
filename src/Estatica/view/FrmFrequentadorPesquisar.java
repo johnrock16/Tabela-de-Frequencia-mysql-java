@@ -42,6 +42,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,6 +78,13 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("TesteFrequencia2");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,6 +96,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton4)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addGap(46, 46, 46)
@@ -120,7 +129,9 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -187,7 +198,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         FrequentadorDAO frdao= new FrequentadorDAO();        
-        List<InfosTabela> tabela=frdao.tabelaFrequenciaIntervalos("TB_FREQUENTADOR_IDADE",3);
+        List<InfosTabela> tabela=frdao.tabelaFrequenciaIntervalos("TB_FREQUENTADOR_IDADE");
         
         DecimalFormat df = new DecimalFormat("##.00");
         
@@ -198,6 +209,18 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        FrequentadorDAO frdao= new FrequentadorDAO();        
+        List<InfosTabela> tabela=frdao.tabelaFrequencia("TB_FREQUENTADOR_ESTADO_CIVIL");
+        
+        DecimalFormat df = new DecimalFormat("##.00");
+        
+        for(InfosTabela inf: tabela){
+            System.out.println(inf.getIntervalo()+ " "+ inf.getFa()+ "  "+ inf.getFr()+
+                    " "+ df.format(inf.getFrPCento())+" "+ inf.getFac()+ " "+ df.format(inf.getFacPCento()));
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,6 +262,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField txtcampo;
