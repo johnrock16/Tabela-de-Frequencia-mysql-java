@@ -20,8 +20,6 @@ public class Frequentador {
     private int tempoPermanencia;
     private float rendaFamiliar;
     
-    //Adaptações
-    private String campo1,campo2,campoNumero;
     
     
     
@@ -49,34 +47,6 @@ public class Frequentador {
     public void setMeioDeTransporte(String meioDeTransporte) {
         this.meioDeTransporte = meioDeTransporte;
     }
-
-    public String getCampo1() {
-        return campo1;
-    }
-
-    public void setCampo1(String campo1) {
-        this.campo1 = campo1;
-    }
-
-    public String getCampo2() {
-        return campo2;
-    }
-
-    public void setCampo2(String campo2) {
-        this.campo2 = campo2;
-    }
-
-    public String getCampoNumero() {
-        return campoNumero;
-    }
-
-    public void setCampoNumero(String campoNumero) {
-        this.campoNumero = campoNumero;
-    }
-    
-    
-    
-    
 
     public int getId() {
         return id;

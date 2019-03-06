@@ -244,7 +244,7 @@ public class FrequentadorDAO implements IFrequentador {
      * @param listaRefinada2
      * @return Lista de Frequentadores em modo tabela de 2 colunas
      */
-    public List<Frequentador> criarTabela2infos(String campo1, String campo2, List<Frequentador> listaRefinada1, List<Frequentador> listaRefinada2) {
+    public List<InfosTabela> criarTabela2infos(String campo1, String campo2, List<Frequentador> listaRefinada1, List<Frequentador> listaRefinada2) {
 
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -261,12 +261,12 @@ public class FrequentadorDAO implements IFrequentador {
                     rs = stbd.executeQuery();
 
                     while (rs.next()) {
-                        Frequentador fr = new Frequentador();
+                        InfosTabela infos = new InfosTabela();
 
-                        fr.setCampo1(rs.getString(campo1));
-                        fr.setCampo2(rs.getString(campo2));
+                        infos.setCampo1(rs.getString(campo1));
+                        infos.setCampo2(rs.getString(campo2));
 
-                        objts.add(fr);
+                        objts.add(infos);
 
                     }
                 }
@@ -284,7 +284,7 @@ public class FrequentadorDAO implements IFrequentador {
     /**
      * @deprecated Pois não pertence ao DAO
      */
-    public List<Frequentador> tabela2InfosNumeros(List<Frequentador> tabela2infos) {
+    public List<InfosTabela> tabela2InfosNumeros(List<InfosTabela> tabela2infos) {
 
         List tabela = new ArrayList<>();
         String[][] verifica = new String[tabela2infos.size()][2];
@@ -292,10 +292,10 @@ public class FrequentadorDAO implements IFrequentador {
         int start = 0;
         int pos = 0;
 
-        for (Frequentador f : tabela2infos) {
+        for (InfosTabela inf : tabela2infos) {
 
-            verifica[pos][0] = f.getCampo1();
-            verifica[pos][1] = f.getCampo2();
+            verifica[pos][0] = inf.getCampo1();
+            verifica[pos][1] = inf.getCampo2();
             pos += 1;
 
         }
@@ -324,11 +324,11 @@ public class FrequentadorDAO implements IFrequentador {
             }
             espera += 1;
             if (espera == cont) {
-                Frequentador fr = new Frequentador();
-                fr.setCampo1(campo1);
-                fr.setCampo2(campo2);
-                fr.setCampoNumero("" + cont);
-                tabela.add(fr);
+                InfosTabela inf = new InfosTabela();
+                inf.setCampo1(campo1);
+                inf.setCampo2(campo2);
+                inf.setCampoNumero("" + cont);
+                tabela.add(inf);
                 espera = 0;
             }
 

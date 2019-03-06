@@ -10,7 +10,7 @@ package Estatistica.modelo;
  * @author User
  */
 public class InfosTabela {
-    private String intervalo;
+    private String intervalo,campo1,campo2,campoNumero;
     private double ki,fr,frPCento,facPCento;
     private double menorValor,maiorValor;
     private int fa,fac;
@@ -22,6 +22,32 @@ public class InfosTabela {
     public void setIntervalo(String intervalo) {
         this.intervalo = intervalo;
     }
+
+    public String getCampo1() {
+        return campo1;
+    }
+
+    public void setCampo1(String campo1) {
+        this.campo1 = campo1;
+    }
+
+    public String getCampo2() {
+        return campo2;
+    }
+
+    public void setCampo2(String campo2) {
+        this.campo2 = campo2;
+    }
+
+    public String getCampoNumero() {
+        return campoNumero;
+    }
+
+    public void setCampoNumero(String campoNumero) {
+        this.campoNumero = campoNumero;
+    }
+    
+    
 
     public double getKi() {
         return ki;

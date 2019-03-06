@@ -182,15 +182,15 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
         for (int i=0;i<listaInfo2.size();i++) {
             System.out.println(listaInfo2.get(i));
         }
-        List<Frequentador> tabela=frdao.criarTabela2infos("TB_FREQUENTADOR_ESTADO_CIVIL", "TB_FREQUENTADOR_MEIO_DE_TRANSPORTE", listaInfo, listaInfo2);
-        for (Frequentador f : tabela) {
-            System.out.println(f.getCampo1()+ "  "+f.getCampo2());
+        List<InfosTabela> tabela=frdao.criarTabela2infos("TB_FREQUENTADOR_ESTADO_CIVIL", "TB_FREQUENTADOR_MEIO_DE_TRANSPORTE", listaInfo, listaInfo2);
+        for (InfosTabela inf : tabela) {
+            System.out.println(inf.getCampo1()+ "  "+inf.getCampo2());
         }
         
         
-        List<Frequentador> tabela2=frdao.tabela2InfosNumeros(tabela);
-        for(Frequentador f: tabela2){
-            System.out.println(f.getCampo1()+"  "+f.getCampo2()+"  "+f.getCampoNumero());
+        List<InfosTabela> tabela2=frdao.tabela2InfosNumeros(tabela);
+        for(InfosTabela inf: tabela2){
+            System.out.println(inf.getCampo1()+"  "+inf.getCampo2()+"  "+inf.getCampoNumero());
         }
         
         
