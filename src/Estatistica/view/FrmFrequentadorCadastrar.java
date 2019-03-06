@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Estatica.view;
+package Estatistica.view;
 
 import Estatistica.dao.FrequentadorDAO;
 import Estatistica.modelo.Frequentador;

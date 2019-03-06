@@ -5,7 +5,7 @@
  */
 package Estatistica.dao;
 
-import Estatica.conexao.ConnectionFactory;
+import Estatistica.conexao.ConnectionFactory;
 import Estatistica.modelo.Frequentador;
 import Estatistica.modelo.InfosTabela;
 import IEstatistica.IFrequentador;
@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -29,7 +28,11 @@ public class FrequentadorDAO implements IFrequentador {
     public FrequentadorDAO() {
         this.connection = new ConnectionFactory().getConnection();
     }
+    
+    /**Constante para consulta direcionada*/
+    public static final int ID = 1,SEXO=2,IDADE=3,FREQUENCIASEMANAL=4,ESTADOCIVIL=5,MEIODETRANSPORTE=6,TEMPOPERMANENCIA=7,RENDAFAMILIAR=8;
 
+    
     @Override
     public void cadastrarFrequentador(Frequentador frequentador) {
         String sql = "insert into tb_frequentador"
@@ -58,6 +61,8 @@ public class FrequentadorDAO implements IFrequentador {
 
     }
 
+    
+    @Override
     public void alterarFrequentador(Frequentador frequentador) {
         try {
             String sql = "Update tb_frequentador set "
@@ -91,7 +96,8 @@ public class FrequentadorDAO implements IFrequentador {
     }
     
     //pesquisa normal
-
+    
+    @Override
     public List<Frequentador> getListFrequentadorPorInfo(String campo, String info) {
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -132,7 +138,12 @@ public class FrequentadorDAO implements IFrequentador {
     }
     
     //pegar infos por coluna
-
+    /**
+     * Selecionar coluna de informações
+     * @param coluna Numero da Coluna selecionada.
+     * Numero das colulas em constantes nesta mesma classe (FrequentadorDAO)
+     * @return Lista de Frequentadores
+     */
     public List<Frequentador> pegarInfo(int coluna) {
 
         List infoLista = new ArrayList<>();
@@ -194,7 +205,11 @@ public class FrequentadorDAO implements IFrequentador {
     }
     
     //arrancar infos repetidas
-
+    /**
+     * Filtrar Informações repitidas
+     * @param listaInfo Lista de Frequentadores com informações repetidas
+     * @return Lista de Frequentadores filtrada
+     */
     public List<Frequentador> filtrarInfo(List<Frequentador> listaInfo) {
 
         boolean existe = false;
@@ -222,7 +237,13 @@ public class FrequentadorDAO implements IFrequentador {
     }
     
     //criar tabela com 2 infos
-
+    /**Criar tabela de 2 informações
+     * @param campo1 Primeiro campo/coluna consultado
+     * @param campo2 Segundo campo/coluna consultado
+     * @param listaRefinada1
+     * @param listaRefinada2
+     * @return Lista de Frequentadores em modo tabela de 2 colunas
+     */
     public List<Frequentador> criarTabela2infos(String campo1, String campo2, List<Frequentador> listaRefinada1, List<Frequentador> listaRefinada2) {
 
         PreparedStatement stbd = null;
@@ -260,7 +281,9 @@ public class FrequentadorDAO implements IFrequentador {
     }
 
     // tabela com 2 infos completa
-    
+    /**
+     * @deprecated Pois não pertence ao DAO
+     */
     public List<Frequentador> tabela2InfosNumeros(List<Frequentador> tabela2infos) {
 
         List tabela = new ArrayList<>();
@@ -314,6 +337,10 @@ public class FrequentadorDAO implements IFrequentador {
         return tabela;
     }
     
+    
+    /**
+     * @deprecated Pois não pertence ao DAO
+     */
     public List<InfosTabela> tabelaFrequencia(String campo) {
         InfosTabela inf = new InfosTabela();
         List tabela = new ArrayList<>();
@@ -333,12 +360,15 @@ public class FrequentadorDAO implements IFrequentador {
             infos.setFac(acumulada);
             infos.setFacPCento((infos.getFac()/qtdItens)*100);
             tabela.add(infos);
-        }
+        } 
         return tabela;
     }
 
-    // tabela de frequencias sobre 1 coluna
     
+    // tabela de frequencias sobre 1 coluna
+    /**
+     * @deprecated Pois não pertence ao DAO
+     */
     public List<InfosTabela> tabelaFrequenciaIntervalos(String campo) {
         InfosTabela inf = new InfosTabela();
         List tabela = new ArrayList<>();
@@ -387,7 +417,11 @@ public class FrequentadorDAO implements IFrequentador {
     }
     
     // infos da tabela retirando do banco de dados
-    
+    /**
+     * Contar quantidade de um campo
+     * @param campo Campo consultado
+     * @return Quantidade de Itens do campo consultado
+     */
     public int qtdItens(String campo){
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -409,6 +443,8 @@ public class FrequentadorDAO implements IFrequentador {
         return qtd;
     }
     
+    
+    /***/
     public void pegarMenorEMaiorValor(InfosTabela inf,String campo){
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -444,6 +480,8 @@ public class FrequentadorDAO implements IFrequentador {
         }
     }
 
+   
+    /***/
     public int pegarFa(InfosTabela inf,String campo,double inicio,double fim){
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -466,6 +504,8 @@ public class FrequentadorDAO implements IFrequentador {
         return fa;
     }
     
+    
+    /***/
     public int pegarFa(InfosTabela inf,String campo,String info){
         PreparedStatement stbd = null;
         ResultSet rs = null;
@@ -488,6 +528,8 @@ public class FrequentadorDAO implements IFrequentador {
         return fa;
     }
     
+    
+    /***/
     public List<InfosTabela> pegarStringIntervalo(String campo){
         PreparedStatement stbd = null;
         ResultSet rs = null;

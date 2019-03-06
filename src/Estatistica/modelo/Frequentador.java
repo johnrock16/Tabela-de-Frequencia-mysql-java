@@ -10,9 +10,19 @@ package Estatistica.modelo;
  * @author User
  */
 public class Frequentador {
-    private String sexo,estadoCivil,meioDeTransporte,campo1,campo2,campoNumero;
-    private int id,idade,frequenciaSemanal,tempoPermanencia;
+        
+    private int id;
+    private String sexo;
+    private int idade;
+    private int frequenciaSemanal;
+    private String estadoCivil;
+    private String meioDeTransporte;
+    private int tempoPermanencia;
     private float rendaFamiliar;
+    
+    //Adaptações
+    private String campo1,campo2,campoNumero;
+    
     
     
     
