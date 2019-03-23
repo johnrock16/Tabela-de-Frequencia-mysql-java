@@ -6,7 +6,7 @@
 package Estatistica.modelo;
 
 /**
- *
+ * Modelo da Tabela de informações do Frequentador
  * @author User
  */
 public class InfosTabela {

@@ -6,24 +6,20 @@
 package Estatistica.modelo;
 
 /**
- *
+ * Modelo da entidade Frequentador
  * @author User
  */
-public class Frequentador {
-        
-    private int id;
+public class Frequentador extends ModeloFrequentadorBanco{
+
+    private int id = 0;
     private String sexo;
-    private int idade;
-    private int frequenciaSemanal;
+    private int idade = 0;
+    private int frequenciaSemanal = 0;
     private String estadoCivil;
     private String meioDeTransporte;
-    private int tempoPermanencia;
-    private float rendaFamiliar;
-    
-    
-    
-    
-    
+    private int tempoPermanencia = 0;
+    private float rendaFamiliar = 0;
+
     public String getSexo() {
         return sexo;
     }
@@ -53,7 +49,9 @@ public class Frequentador {
     }
 
     public void setId(int id) {
-        this.id = id;
+        if (id > 0) {
+            this.id = id;
+        }
     }
 
     public int getIdade() {
@@ -61,7 +59,9 @@ public class Frequentador {
     }
 
     public void setIdade(int idade) {
-        this.idade = idade;
+        if (idade >= 0) {
+            this.idade = idade;
+        }
     }
 
     public int getFrequenciaSemanal() {
@@ -69,7 +69,9 @@ public class Frequentador {
     }
 
     public void setFrequenciaSemanal(int frequenciaSemanal) {
-        this.frequenciaSemanal = frequenciaSemanal;
+        if (frequenciaSemanal >= 0) {
+            this.frequenciaSemanal = frequenciaSemanal;
+        }
     }
 
     public int getTempoPermanencia() {
@@ -77,7 +79,9 @@ public class Frequentador {
     }
 
     public void setTempoPermanencia(int tempoPermanencia) {
-        this.tempoPermanencia = tempoPermanencia;
+        if (tempoPermanencia >= 0) {
+            this.tempoPermanencia = tempoPermanencia;
+        }
     }
 
     public float getRendaFamiliar() {
@@ -85,17 +89,58 @@ public class Frequentador {
     }
 
     public void setRendaFamiliar(float rendaFamiliar) {
-        this.rendaFamiliar = rendaFamiliar;
+        if (rendaFamiliar >= 0) {
+            this.rendaFamiliar = rendaFamiliar;
+        }
+    }
+
+    /**
+     * Preenche o objeto com o Array seguindo o padrão do FrequentadorDAO.
+     *
+     * @param vars - Array baseado Modelo do Banco (CAMPOS)
+     */
+    public void preencherSemID(Object vars[]) {
+        setSexo(String.valueOf(vars[SEXO]));
+        setIdade(Integer.parseInt(vars[IDADE].toString()));
+        setFrequenciaSemanal((Integer.parseInt( vars[FREQUENCIA_SEMANAL].toString())));
+        setEstadoCivil(String.valueOf(vars[ESTADO_CIVIL]));
+        setMeioDeTransporte(String.valueOf(vars[MEIO_DE_TRANSPORTE]));
+        setTempoPermanencia((Integer.parseInt( vars[TEMPO_PERMANENCIA].toString())));
+        setRendaFamiliar(Float.parseFloat(vars[RENDA_FAMILIAR].toString()));
+    }
+    
+    /**
+     * Preenche o objeto com o Array seguindo o padrão do FrequentadorDAO.
+     *
+     * @param vars - Array baseado no Modelo do Banco (CAMPOS)
+     */
+    public void preencherPorCompleto(Object vars[]) {
+        setId(Integer.parseInt(vars[ID].toString()));
+        setSexo(String.valueOf(vars[SEXO]));
+        setIdade(Integer.parseInt(vars[IDADE].toString()));
+        setFrequenciaSemanal(Integer.parseInt( vars[FREQUENCIA_SEMANAL].toString()));
+        setEstadoCivil(String.valueOf(vars[ESTADO_CIVIL]));
+        setMeioDeTransporte(String.valueOf(vars[MEIO_DE_TRANSPORTE]));
+        setTempoPermanencia((Integer.parseInt( vars[TEMPO_PERMANENCIA].toString())));
+        setRendaFamiliar(Float.parseFloat(vars[RENDA_FAMILIAR].toString()));
     }
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * Pega todos os campos do objeto em um Array seguindo o padrão do
+     * FrequentadorDAO.
+     *
+     * @param vars - Array baseado no Modelo do Banco (CAMPOS)
+     */
+    public void getPorCompleto(Object vars[]) {
+        vars[ID] = getId();
+        vars[SEXO] = getSexo();
+        vars[IDADE] = getIdade();
+        vars[FREQUENCIA_SEMANAL] = getFrequenciaSemanal();
+        vars[ESTADO_CIVIL] = getEstadoCivil();
+        vars[MEIO_DE_TRANSPORTE] = getMeioDeTransporte();
+        vars[TEMPO_PERMANENCIA] = getTempoPermanencia();
+        vars[RENDA_FAMILIAR] = getRendaFamiliar();
+    }
+
 }

@@ -8,7 +8,7 @@ package Estatistica.dao;
 import Estatistica.conexao.ConnectionFactory;
 import Estatistica.modelo.Frequentador;
 import Estatistica.modelo.InfosTabela;
-import IEstatistica.IFrequentador;
+import Estatistica.modelo.ModeloFrequentadorBanco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,32 +16,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import IEstatistica.IFrequentadorDAO;
 
 /**
- *
+ * Classe de manipulação direta do banco de dados
  * @author User
  */
-public class FrequentadorDAO implements IFrequentador {
-
-    public Connection connection;
-
+public class FrequentadorDAO extends ModeloFrequentadorBanco implements IFrequentadorDAO {
+    
+    protected Connection connection;
+    
     public FrequentadorDAO() {
         this.connection = new ConnectionFactory().getConnection();
     }
-    
-    /**Constante para consulta direcionada*/
-    public static final int ID = 1,SEXO=2,IDADE=3,FREQUENCIASEMANAL=4,ESTADOCIVIL=5,MEIODETRANSPORTE=6,TEMPOPERMANENCIA=7,RENDAFAMILIAR=8;
 
-    
     @Override
     public void cadastrarFrequentador(Frequentador frequentador) {
         String sql = "insert into tb_frequentador"
                 + "(TB_FREQUENTADOR_SEXO,TB_FREQUENTADOR_IDADE,TB_FREQUENTADOR_FREQUENCIA_SEMANAL,TB_FREQUENTADOR_ESTADO_CIVIL,"
                 + "TB_FREQUENTADOR_MEIO_DE_TRANSPORTE,TB_FREQUENTADOR_TEMPO_PERMANENCIA_MINUTOS,TB_FREQUENTADOR_RENDA_FAMILIAR)"
                 + " values (?,?,?,?,?,?,?)";
-        try {
-
-            PreparedStatement stmt = connection.prepareStatement(sql);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, frequentador.getSexo());
             stmt.setInt(2, frequentador.getIdade());
             stmt.setInt(3, frequentador.getFrequenciaSemanal());
@@ -49,11 +44,8 @@ public class FrequentadorDAO implements IFrequentador {
             stmt.setString(5, frequentador.getMeioDeTransporte());
             stmt.setInt(6, frequentador.getTempoPermanencia());
             stmt.setFloat(7, frequentador.getRendaFamiliar());
-            System.out.println("ass");
             stmt.executeUpdate();
-
             JOptionPane.showMessageDialog(null, "cadastrado com sucesso");
-            stmt.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao Cadastrar");
             throw new RuntimeException(e);
@@ -61,21 +53,18 @@ public class FrequentadorDAO implements IFrequentador {
 
     }
 
-    
     @Override
     public void alterarFrequentador(Frequentador frequentador) {
-        try {
-            String sql = "Update tb_frequentador set "
-                    + "TB_FREQUENTADOR_SEXO=?, "
-                    + "TB_FREQUENTADOR_IDADE=?, "
-                    + "TB_FREQUENTADOR_FREQUENCIA_SEMANAL=?, "
-                    + "TB_FREQUENTADOR_ESTADO_CIVIL=?, "
-                    + "TB_FREQUENTADOR_MEIO_DE_TRANSPORTE=?, "
-                    + "TB_FREQUENTADOR_TEMPO_PERMANENCIA_MINUTOS=?, "
-                    + "TB_FREQUENTADOR_RENDA_FAMILIAR=? "
-                    + "where TB_FREQUENTADOR_ID=? ";
-            PreparedStatement stmt = connection.prepareStatement(sql);
-
+        String sql = "Update tb_frequentador set "
+                + "TB_FREQUENTADOR_SEXO=?, "
+                + "TB_FREQUENTADOR_IDADE=?, "
+                + "TB_FREQUENTADOR_FREQUENCIA_SEMANAL=?, "
+                + "TB_FREQUENTADOR_ESTADO_CIVIL=?, "
+                + "TB_FREQUENTADOR_MEIO_DE_TRANSPORTE=?, "
+                + "TB_FREQUENTADOR_TEMPO_PERMANENCIA_MINUTOS=?, "
+                + "TB_FREQUENTADOR_RENDA_FAMILIAR=? "
+                + "where TB_FREQUENTADOR_ID=? ";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, frequentador.getSexo());
             stmt.setInt(2, frequentador.getIdade());
             stmt.setInt(3, frequentador.getFrequenciaSemanal());
@@ -86,7 +75,6 @@ public class FrequentadorDAO implements IFrequentador {
             stmt.setInt(8, frequentador.getId());
 
             stmt.execute();
-            stmt.close();
 
             JOptionPane.showMessageDialog(null, "Alterado com Sucesso!");
         } catch (SQLException ex) {
@@ -94,16 +82,13 @@ public class FrequentadorDAO implements IFrequentador {
             throw new RuntimeException(ex);
         }
     }
-    
-    //pesquisa normal
-    
+
+//pesquisa normal
     @Override
     public List<Frequentador> getListFrequentadorPorInfo(String campo, String info) {
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
         List objts = new ArrayList<>();
         try {
-            stbd = connection.prepareStatement("SELECT "
+            PreparedStatement stbd = connection.prepareStatement("SELECT "
                     + "TB_FREQUENTADOR_ID,"
                     + "TB_FREQUENTADOR_SEXO,"
                     + "TB_FREQUENTADOR_IDADE,"
@@ -114,7 +99,7 @@ public class FrequentadorDAO implements IFrequentador {
                     + "TB_FREQUENTADOR_RENDA_FAMILIAR "
                     + "FROM tb_frequentador where " + campo + " like '%" + info + "%'");
 
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
                 Frequentador fr = new Frequentador();
@@ -136,62 +121,64 @@ public class FrequentadorDAO implements IFrequentador {
         }
         return objts;
     }
-    
+
     //pegar infos por coluna
     /**
      * Selecionar coluna de informações
-     * @param coluna Numero da Coluna selecionada.
-     * Numero das colulas em constantes nesta mesma classe (FrequentadorDAO)
+     *
+     * @param coluna Numero da Coluna selecionada. Numero das colulas em
+     * constantes nesta mesma classe (FrequentadorDAO)
      * @return Lista de Frequentadores
      */
     public List<Frequentador> pegarInfo(int coluna) {
 
         List infoLista = new ArrayList<>();
-        List<Frequentador> lista = this.getListFrequentadorPorInfo("TB_FREQUENTADOR_ID", "");
+        List<Frequentador> lista;
+        lista = this.getListFrequentadorPorInfo(CAMPOS[ID], "");
         switch (coluna) {
-            case 1:
+            case ID:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getId());
                 }
                 break;
 
-            case 2:
+            case SEXO:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getSexo());
                 }
                 break;
 
-            case 3:
+            case IDADE:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getIdade());
                 }
                 break;
 
-            case 4:
+            case FREQUENCIA_SEMANAL:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getFrequenciaSemanal());
                 }
                 break;
 
-            case 5:
+            case ESTADO_CIVIL:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getEstadoCivil());
                 }
                 break;
 
-            case 6:
+            case MEIO_DE_TRANSPORTE:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getMeioDeTransporte());
                 }
                 break;
 
-            case 7:
+            case TEMPO_PERMANENCIA:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getTempoPermanencia());
                 }
                 break;
 
-            case 8:
+            case RENDA_FAMILIAR:
                 for (Frequentador f : lista) {
                     infoLista.add(f.getRendaFamiliar());
                 }
@@ -203,23 +190,24 @@ public class FrequentadorDAO implements IFrequentador {
 
         return infoLista;
     }
-    
+
     //arrancar infos repetidas
     /**
      * Filtrar Informações repitidas
+     *
      * @param listaInfo Lista de Frequentadores com informações repetidas
      * @return Lista de Frequentadores filtrada
      */
     public List<Frequentador> filtrarInfo(List<Frequentador> listaInfo) {
-
-        boolean existe = false;
         List filtrarLista = new ArrayList<>();
 
         for (int i = 0; i < listaInfo.size(); i++) {
             if (i == 0) {
                 filtrarLista.add(listaInfo.get(i));
             }
-            existe = false;
+
+            boolean existe = false;
+
             for (int j = 0; j < filtrarLista.size(); j++) {
                 if (existe == false) {
                     if (filtrarLista.get(j).equals(listaInfo.get(i))) {
@@ -228,6 +216,7 @@ public class FrequentadorDAO implements IFrequentador {
                     }
                 }
             }
+
             if (existe == false) {
                 filtrarLista.add(listaInfo.get(i));
             }
@@ -235,30 +224,29 @@ public class FrequentadorDAO implements IFrequentador {
 
         return filtrarLista;
     }
-    
+
     //criar tabela com 2 infos
-    /**Criar tabela de 2 informações
+    /**
+     * Criar tabela de 2 informações
+     *
      * @param campo1 Primeiro campo/coluna consultado
      * @param campo2 Segundo campo/coluna consultado
-     * @param listaRefinada1
-     * @param listaRefinada2
+     * @param listaRefinada1 Primeira lista de informações usadas
+     * @param listaRefinada2 Segunda lista de informações usadas
      * @return Lista de Frequentadores em modo tabela de 2 colunas
      */
     public List<InfosTabela> criarTabela2infos(String campo1, String campo2, List<Frequentador> listaRefinada1, List<Frequentador> listaRefinada2) {
-
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
         List objts = new ArrayList<>();
         try {
             for (int i = 0; i < listaRefinada1.size(); i++) {
                 for (int j = 0; j < listaRefinada2.size(); j++) {
-                    stbd = connection.prepareStatement("SELECT "
+                    PreparedStatement stbd = connection.prepareStatement("SELECT "
                             + campo1 + ","
                             + campo2 + " "
                             + "FROM tb_frequentador where " + campo1 + " like '" + listaRefinada1.get(i) + "' "
                             + "and " + campo2 + " like '" + listaRefinada2.get(j) + "' ");
 
-                    rs = stbd.executeQuery();
+                    ResultSet rs = stbd.executeQuery();
 
                     while (rs.next()) {
                         InfosTabela infos = new InfosTabela();
@@ -280,160 +268,23 @@ public class FrequentadorDAO implements IFrequentador {
 
     }
 
-    // tabela com 2 infos completa
-    /**
-     * @deprecated Pois não pertence ao DAO
-     */
-    public List<InfosTabela> tabela2InfosNumeros(List<InfosTabela> tabela2infos) {
-
-        List tabela = new ArrayList<>();
-        String[][] verifica = new String[tabela2infos.size()][2];
-        int vezes = 0;
-        int start = 0;
-        int pos = 0;
-
-        for (InfosTabela inf : tabela2infos) {
-
-            verifica[pos][0] = inf.getCampo1();
-            verifica[pos][1] = inf.getCampo2();
-            pos += 1;
-
-        }
-        System.out.println("novo");
-        for (int i = 0; i < verifica.length - 1; i++) {
-            System.out.println(verifica[i][0] + "  " + verifica[i][1]);
-        }
-
-        System.out.print("\n Frequencia dos numeros \n");
-        int cont = 1;
-        int espera = 0;
-        String campo2 = "";
-        String campo1 = "";
-        for (int i = 0; i < verifica.length; i++) {
-            cont = 0;
-            for (int j = 0; j < verifica.length; j++) {
-                if (verifica[i][0].equals(verifica[j][0])) {
-                    if (verifica[i][1].equals(verifica[j][1])) {
-                        cont++;
-                    }
-                    campo2 = verifica[i][1];
-                    campo1 = verifica[i][0];
-
-                }
-
-            }
-            espera += 1;
-            if (espera == cont) {
-                InfosTabela inf = new InfosTabela();
-                inf.setCampo1(campo1);
-                inf.setCampo2(campo2);
-                inf.setCampoNumero("" + cont);
-                tabela.add(inf);
-                espera = 0;
-            }
-
-        }
-
-        return tabela;
-    }
-    
-    
-    /**
-     * @deprecated Pois não pertence ao DAO
-     */
-    public List<InfosTabela> tabelaFrequencia(String campo) {
-        InfosTabela inf = new InfosTabela();
-        List tabela = new ArrayList<>();
-        List<InfosTabela> intervalos=pegarStringIntervalo(campo);
-        double qtdItens=qtdItens(campo);
-        int acumulada=0;
-        
-        
-        
-        for(InfosTabela infT: intervalos){
-            InfosTabela infos=new InfosTabela();            
-            infos.setIntervalo(infT.getIntervalo());
-            infos.setFa(pegarFa(inf, campo,infos.getIntervalo()));
-            infos.setFr(infos.getFa()/qtdItens);
-            infos.setFrPCento(infos.getFr()*100);
-            acumulada+=infos.getFa();
-            infos.setFac(acumulada);
-            infos.setFacPCento((infos.getFac()/qtdItens)*100);
-            tabela.add(infos);
-        } 
-        return tabela;
-    }
-
-    
-    // tabela de frequencias sobre 1 coluna
-    /**
-     * @deprecated Pois não pertence ao DAO
-     */
-    public List<InfosTabela> tabelaFrequenciaIntervalos(String campo) {
-        InfosTabela inf = new InfosTabela();
-        List tabela = new ArrayList<>();
-        double qtdItens=qtdItens(campo);
-        double k = Math.ceil(Math.sqrt(qtdItens));
-        double at,h;
-        double InicioIntervalo,FimIntervalo;
-        int acumulada=0;
-        
-        
-        pegarMenorEMaiorValor(inf, campo);
-        
-        
-        
-        at=inf.getMaiorValor()-inf.getMenorValor();
-        h=Math.ceil(at/k);
-        
-        System.out.println(k);
-        System.out.println(inf.getMenorValor());
-        System.out.println(inf.getMaiorValor());
-        System.out.println(at);
-        System.out.println(h);
-        
-        InicioIntervalo=inf.getMenorValor();
-        FimIntervalo=InicioIntervalo+h;
-        
-        for(int i=0;i<k;i++){
-            InfosTabela infos=new InfosTabela();            
-            infos.setIntervalo(InicioIntervalo+"|-------"+FimIntervalo);           
-            infos.setKi((InicioIntervalo+FimIntervalo)/2); 
-            infos.setFa(pegarFa(inf, campo, InicioIntervalo, FimIntervalo));
-            infos.setFr(infos.getFa()/qtdItens);
-            infos.setFrPCento(infos.getFr()*100);
-            acumulada+=infos.getFa();
-            infos.setFac(acumulada);
-            infos.setFacPCento((infos.getFac()/qtdItens)*100);
-            tabela.add(infos);
-            InicioIntervalo+=h;
-            FimIntervalo+=h;
-        }
-        
-
-        System.out.println(qtdItens);
-
-        return tabela;
-    }
-    
     // infos da tabela retirando do banco de dados
     /**
      * Contar quantidade de um campo
+     *
      * @param campo Campo consultado
      * @return Quantidade de Itens do campo consultado
      */
-    public int qtdItens(String campo){
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
-        int qtd=0;
+    public int qtdItens(String campo) {
+        int qtd = 0;
         //pegar o menor valor
         try {
-            stbd = connection.prepareStatement("select COUNT("+campo+") from tb_frequentador ");
+            PreparedStatement stbd = connection.prepareStatement("select COUNT(" + campo + ") from tb_frequentador ");
 
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
-                qtd=rs.getInt("COUNT("+campo+")");
+                qtd = rs.getInt("COUNT(" + campo + ")");
 
             }
         } catch (SQLException ex) {
@@ -442,36 +293,36 @@ public class FrequentadorDAO implements IFrequentador {
         }
         return qtd;
     }
-    
-    
-    /***/
-    public void pegarMenorEMaiorValor(InfosTabela inf,String campo){
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
-        
+
+    /**
+     * Pega o Menor e maior valor de um campo
+     * @param inf Informação pesquisada
+     * @param campo Campo alvo da pesquisa
+     */
+    public void pegarMenorEMaiorValor(InfosTabela inf, String campo) {
         //pegar o menor valor
         try {
-            stbd = connection.prepareStatement("SELECT MIN("+campo+") from tb_frequentador");
+            PreparedStatement stbd = connection.prepareStatement("SELECT MIN(" + campo + ") from tb_frequentador");
 
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
-                inf.setMenorValor(rs.getInt("MIN("+campo+")"));
+                inf.setMenorValor(rs.getInt("MIN(" + campo + ")"));
 
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro na Busca!");
             throw new RuntimeException(ex);
         }
-        
+
         //pegar o maior valor
         try {
-            stbd = connection.prepareStatement("SELECT MAX("+campo+") from tb_frequentador");
+            PreparedStatement stbd = connection.prepareStatement("SELECT MAX(" + campo + ") from tb_frequentador");
 
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
-                inf.setMaiorValor(rs.getInt("MAX("+campo+")"));
+                inf.setMaiorValor(rs.getInt("MAX(" + campo + ")"));
 
             }
         } catch (SQLException ex) {
@@ -480,45 +331,25 @@ public class FrequentadorDAO implements IFrequentador {
         }
     }
 
-   
-    /***/
-    public int pegarFa(InfosTabela inf,String campo,double inicio,double fim){
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
-        int fa=0;
+    /**
+     * Pega a quantidade de uma informação nos dados do frequentador (Com intervalo)
+     * @param inf Informação pesquisada
+     * @param campo Campo alvo da pesquisa
+     * @param inicio Inicio da seleção condicionda ao intervalo
+     * @param fim Fim da condição condicionada ao intervalo
+     * @return Quantidade da informação requerida
+     */
+    public int pegarFa(InfosTabela inf, String campo, double inicio, double fim) {
+        int fa = 0;
         //pegar o menor valor
         try {
-            stbd = connection.prepareStatement("select COUNT("+campo+") from tb_frequentador "
-                    + "where "+campo+">="+inicio+" and "+campo+"<"+fim+" ");
+            PreparedStatement stbd = connection.prepareStatement("select COUNT(" + campo + ") from tb_frequentador "
+                    + "where " + campo + ">=" + inicio + " and " + campo + "<" + fim + " ");
 
-            rs = stbd.executeQuery();
-
-            while (rs.next()) {
-                fa=rs.getInt("COUNT("+campo+")");
-
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro na Busca!");
-            throw new RuntimeException(ex);
-        }
-        return fa;
-    }
-    
-    
-    /***/
-    public int pegarFa(InfosTabela inf,String campo,String info){
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
-        int fa=0;
-        //pegar o menor valor
-        try {
-            stbd = connection.prepareStatement("select COUNT("+campo+") from tb_frequentador "
-                    + "where "+campo+" like '"+info+"'");
-
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
-                fa=rs.getInt("COUNT("+campo+")");
+                fa = rs.getInt("COUNT(" + campo + ")");
 
             }
         } catch (SQLException ex) {
@@ -527,21 +358,49 @@ public class FrequentadorDAO implements IFrequentador {
         }
         return fa;
     }
-    
-    
-    /***/
-    public List<InfosTabela> pegarStringIntervalo(String campo){
-        PreparedStatement stbd = null;
-        ResultSet rs = null;
-        List tabela=new ArrayList<>();
+
+    /**
+     * Pega a quantidade de uma informação nos dados do frequentador (Simples)
+     * @param inf Tabela de Informações
+     * @param info Informação pesquisada
+     * @param campo Campo alvo da pesquisa
+     * @return Quantidade da informação requerida
+     */
+    public int pegarFa(InfosTabela inf, String campo, String info) {
+        int fa = 0;
         //pegar o menor valor
         try {
-            stbd = connection.prepareStatement("select distinct "+campo+" from tb_frequentador ");
+            PreparedStatement stbd = connection.prepareStatement("select COUNT(" + campo + ") from tb_frequentador "
+                    + "where " + campo + " like '" + info + "'");
 
-            rs = stbd.executeQuery();
+            ResultSet rs = stbd.executeQuery();
 
             while (rs.next()) {
-                InfosTabela infos=new InfosTabela();
+                fa = rs.getInt("COUNT(" + campo + ")");
+
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro na Busca!");
+            throw new RuntimeException(ex);
+        }
+        return fa;
+    }
+
+    /**
+     * Pega uma lista de Informações de um campo do frequentador
+     * @param campo Campo alvo da pesquisa
+     * @return Lista de Informações do campo
+     */
+    public List<InfosTabela> pegarStringIntervalo(String campo) {
+        List tabela = new ArrayList<>();
+        //pegar o menor valor
+        try {
+            PreparedStatement stbd = connection.prepareStatement("select distinct " + campo + " from tb_frequentador ");
+
+            ResultSet rs = stbd.executeQuery();
+
+            while (rs.next()) {
+                InfosTabela infos = new InfosTabela();
                 infos.setIntervalo(rs.getString(campo));
                 tabela.add(infos);
 
@@ -550,8 +409,8 @@ public class FrequentadorDAO implements IFrequentador {
             JOptionPane.showMessageDialog(null, "Erro na Busca!");
             throw new RuntimeException(ex);
         }
-        
+
         return tabela;
     }
-    
+
 }

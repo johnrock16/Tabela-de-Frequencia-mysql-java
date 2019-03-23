@@ -6,10 +6,6 @@
 package Estatistica.view;
 
 import Estatistica.controle.ControleFrequentador;
-import Estatistica.dao.FrequentadorDAO;
-import Estatistica.modelo.InfosTabela;
-import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  *
@@ -157,36 +153,35 @@ public class FrmFrequentadorPesquisa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        FrequentadorDAO frdao = new FrequentadorDAO();
-        ControleFrequentador con = new ControleFrequentador();
+//        FrequentadorDAO frdao = new FrequentadorDAO();
+//        ControleFrequentador con = new ControleFrequentador();
+//
+//        if (cbPes.getSelectedIndex() == 3) {
+//
+//            List<InfosTabela> tabela = con.tabelaFrequenciaIntervalos(txtCampo1.getText());
+//
+//            DecimalFormat df = new DecimalFormat("##.00");
+//
+//            for (InfosTabela inf : tabela) {
+//                System.out.println(inf.getIntervalo() + "  " + df.format(inf.getKi()) + " " + inf.getFa() + "  " + inf.getFr()
+//                        + " " + df.format(inf.getFrPCento()) + " " + inf.getFac() + " " + df.format(inf.getFacPCento()));
+//            }
+//
+//            tblInfos.setModel(con.preencherJTableIntervalo(tabela, tblInfos));
+//
+//        } else if (cbPes.getSelectedIndex() == 4) {
+//            List<InfosTabela> tabela = con.tabelaFrequencia(txtCampo1.getText());
+//
+//            DecimalFormat df = new DecimalFormat("##.00");
+//
+//            for (InfosTabela inf : tabela) {
+//                System.out.println(inf.getIntervalo() + " " + inf.getFa() + "  " + inf.getFr()
+//                        + " " + df.format(inf.getFrPCento()) + " " + inf.getFac() + " " + df.format(inf.getFacPCento()));
+//            }
+//            tblInfos.setModel(con.preencherJTableIntervalo(tabela, tblInfos));
+//        }
 
-        if (cbPes.getSelectedIndex() == 3) {
-
-            List<InfosTabela> tabela = frdao.tabelaFrequenciaIntervalos(txtCampo1.getText());
-
-            DecimalFormat df = new DecimalFormat("##.00");
-
-            for (InfosTabela inf : tabela) {
-                System.out.println(inf.getIntervalo() + "  " + df.format(inf.getKi()) + " " + inf.getFa() + "  " + inf.getFr()
-                        + " " + df.format(inf.getFrPCento()) + " " + inf.getFac() + " " + df.format(inf.getFacPCento()));
-            }
-
-            tblInfos.setModel(con.preencherJTableIntervalo(tabela, tblInfos));
-
-        } else if (cbPes.getSelectedIndex() == 4) {
-            List<InfosTabela> tabela = frdao.tabelaFrequencia(txtCampo1.getText());
-
-            DecimalFormat df = new DecimalFormat("##.00");
-
-            for (InfosTabela inf : tabela) {
-                System.out.println(inf.getIntervalo() + " " + inf.getFa() + "  " + inf.getFr()
-                        + " " + df.format(inf.getFrPCento()) + " " + inf.getFac() + " " + df.format(inf.getFacPCento()));
-            }
-            tblInfos.setModel(con.preencherJTableIntervalo(tabela, tblInfos));
-        }
-        
-       
-
+        ControleFrequentador.pesquisarFreq(txtCampo1.getText(), txtCampo2.getText(), txtInfo.getText(), tblInfos, cbPes);
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
