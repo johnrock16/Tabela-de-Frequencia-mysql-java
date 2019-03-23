@@ -5,8 +5,7 @@
  */
 package Estatistica.view;
 
-import Estatistica.dao.FrequentadorDAO;
-import Estatistica.modelo.Frequentador;
+import Estatistica.controle.ControleFrequentador;
 
 /**
  *
@@ -108,44 +107,63 @@ public class FrmFrequentadorCadastrar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btncadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncadastrarActionPerformed
-        Frequentador fr= new Frequentador();
-        FrequentadorDAO frdao= new FrequentadorDAO();
-        try{
-            fr.setSexo(txtsexo.getText());
-            fr.setIdade(Integer.parseInt(txtidade.getText()));
-            fr.setFrequenciaSemanal(Integer.parseInt(txtfreqsemanal.getText()));
-            fr.setEstadoCivil(txtestadocivil.getText());
-            fr.setMeioDeTransporte(txtmeiotransporte.getText());
-            fr.setTempoPermanencia(Integer.parseInt(txttempodepermanencia.getText()));
-            fr.setRendaFamiliar(Float.parseFloat(txtrendafamiliar.getText()));
+//        Frequentador fr= new Frequentador();
+//        FrequentadorDAO frdao= new FrequentadorDAO();
+//        try{
+//            fr.setSexo(txtsexo.getText());
+//            fr.setIdade(Integer.parseInt(txtidade.getText()));
+//            fr.setFrequenciaSemanal(Integer.parseInt(txtfreqsemanal.getText()));
+//            fr.setEstadoCivil(txtestadocivil.getText());
+//            fr.setMeioDeTransporte(txtmeiotransporte.getText());
+//            fr.setTempoPermanencia(Integer.parseInt(txttempodepermanencia.getText()));
+//            fr.setRendaFamiliar(Float.parseFloat(txtrendafamiliar.getText()));
+//
+//            frdao.cadastrarFrequentador(fr);
+//        }
+//        catch(Exception e){
+//            System.out.println("erro ao cadastrar na hora de passa valor");
+//        }
 
-            frdao.cadastrarFrequentador(fr);
-        }
-        catch(Exception e){
-            System.out.println("erro ao cadastrar na hora de passa valor");
-        }
-        
-        
-        
+        Object vars[] = new Object[ControleFrequentador.CAMPOS.length];
+        vars[ControleFrequentador.SEXO] = txtsexo.getText();
+        vars[ControleFrequentador.IDADE] = txtidade.getText();
+        vars[ControleFrequentador.ESTADO_CIVIL] = txtestadocivil.getText();
+        vars[ControleFrequentador.FREQUENCIA_SEMANAL] = txtfreqsemanal.getText();
+        vars[ControleFrequentador.MEIO_DE_TRANSPORTE] = txtmeiotransporte.getText();
+        vars[ControleFrequentador.RENDA_FAMILIAR] = txtrendafamiliar.getText();
+        vars[ControleFrequentador.TEMPO_PERMANENCIA] = txttempodepermanencia.getText();
+        ControleFrequentador.cadastrarFreq(vars);
+
+
     }//GEN-LAST:event_btncadastrarActionPerformed
 
     private void btnalterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnalterarActionPerformed
-        Frequentador fr= new Frequentador();
-        FrequentadorDAO frdao= new FrequentadorDAO();
-        try{
-            fr.setSexo(txtsexo.getText());
-            fr.setIdade(Integer.parseInt(txtidade.getText()));
-            fr.setFrequenciaSemanal(Integer.parseInt(txtfreqsemanal.getText()));
-            fr.setEstadoCivil(txtestadocivil.getText());
-            fr.setMeioDeTransporte(txtmeiotransporte.getText());
-            fr.setTempoPermanencia(Integer.parseInt(txttempodepermanencia.getText()));
-            fr.setRendaFamiliar(Float.parseFloat(txtrendafamiliar.getText()));
-            fr.setId(Integer.parseInt(txtid.getText()));
-            frdao.alterarFrequentador(fr);
-        }
-        catch(Exception e){
-            System.out.println("erro ao cadastrar na hora de passa valor");
-        }
+//        Frequentador fr = new Frequentador();
+//        FrequentadorDAO frdao = new FrequentadorDAO();
+//        try {
+//            fr.setSexo(txtsexo.getText());
+//            fr.setIdade(Integer.parseInt(txtidade.getText()));
+//            fr.setFrequenciaSemanal(Integer.parseInt(txtfreqsemanal.getText()));
+//            fr.setEstadoCivil(txtestadocivil.getText());
+//            fr.setMeioDeTransporte(txtmeiotransporte.getText());
+//            fr.setTempoPermanencia(Integer.parseInt(txttempodepermanencia.getText()));
+//            fr.setRendaFamiliar(Float.parseFloat(txtrendafamiliar.getText()));
+//            fr.setId(Integer.parseInt(txtid.getText()));
+//            frdao.alterarFrequentador(fr);
+//        } catch (Exception e) {
+//            System.out.println("erro ao cadastrar na hora de passa valor");
+//        }
+
+        Object vars[] = new Object[ControleFrequentador.CAMPOS.length];
+        vars[ControleFrequentador.ID] = txtid.getText();
+        vars[ControleFrequentador.SEXO] = txtsexo.getText();
+        vars[ControleFrequentador.IDADE] = txtidade.getText();
+        vars[ControleFrequentador.ESTADO_CIVIL] = txtestadocivil.getText();
+        vars[ControleFrequentador.FREQUENCIA_SEMANAL] = txtfreqsemanal.getText();
+        vars[ControleFrequentador.MEIO_DE_TRANSPORTE] = txtmeiotransporte.getText();
+        vars[ControleFrequentador.RENDA_FAMILIAR] = txtrendafamiliar.getText();
+        vars[ControleFrequentador.TEMPO_PERMANENCIA] = txttempodepermanencia.getText();
+        ControleFrequentador.alterarFreq(vars);
     }//GEN-LAST:event_btnalterarActionPerformed
 
     /**

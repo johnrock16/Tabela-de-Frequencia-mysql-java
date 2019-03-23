@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Estatica/src/Estatistica/dao/FrequentadorDAO.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Estatica/src/Estatistica/modelo/Frequentador.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Estatica/src/Estatistica/view/FrmFrequentadorPesquisa.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Estatica/src/Estatistica/modelo/InfosTabela.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Estatica/src/Estatistica/view/FrmFrequentadorPesquisar.java</file>
+            <file>file:/C:/Users/Lucas/Documents/GitHub/Tabela-de-Frequencia-mysql-java-master/src/Estatistica/controle/Controle.java</file>
+            <file>file:/C:/Users/Lucas/Documents/GitHub/Tabela-de-Frequencia-mysql-java-master/src/Estatistica/conexao/ConnectionFactory.java</file>
         </group>
     </open-files>
 </project-private>

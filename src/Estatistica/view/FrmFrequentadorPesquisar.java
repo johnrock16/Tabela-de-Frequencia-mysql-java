@@ -5,11 +5,11 @@
  */
 package Estatistica.view;
 
+import Estatistica.controle.ControleFrequentador;
 import Estatistica.dao.FrequentadorDAO;
 import Estatistica.modelo.Frequentador;
 import Estatistica.modelo.InfosTabela;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -138,22 +138,23 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnpesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnpesquisarActionPerformed
-        Frequentador fr=new Frequentador();
-        FrequentadorDAO frdao=new FrequentadorDAO();
-        
-        /*List frequentador=new ArrayList<Frequentador>();
-        frequentador=frdao.getListFrequentadorPorInfo(txtcampo.getText(), txtinfo.getText());
-        
-        for(int i=0;i<frequentador.size();i++){
-            System.out.println(frequentador.get(i));
-        }
-        */
-        
-        List <Frequentador> lista = frdao.getListFrequentadorPorInfo(txtcampo.getText(), txtinfo.getText());
-        for (Frequentador f : lista) {
-            System.out.println(f.getId() + "  "+f.getSexo()+" "+ f.getIdade() + "  "+ f.getFrequenciaSemanal() +
-                    " "+ f.getEstadoCivil()+" "+ f.getMeioDeTransporte() + " "+ f.getTempoPermanencia()+" "+ f.getRendaFamiliar());
-        }
+//        Frequentador fr=new Frequentador();
+//        FrequentadorDAO frdao=new FrequentadorDAO();
+//        
+//        /*List frequentador=new ArrayList<Frequentador>();
+//        frequentador=frdao.getListFrequentadorPorInfo(txtcampo.getText(), txtinfo.getText());
+//        
+//        for(int i=0;i<frequentador.size();i++){
+//            System.out.println(frequentador.get(i));
+//        }
+//        */
+//        
+//        List <Frequentador> lista = frdao.getListFrequentadorPorInfo(txtcampo.getText(), txtinfo.getText());
+//        for (Frequentador f : lista) {
+//            System.out.println(f.getId() + "  "+f.getSexo()+" "+ f.getIdade() + "  "+ f.getFrequenciaSemanal() +
+//                    " "+ f.getEstadoCivil()+" "+ f.getMeioDeTransporte() + " "+ f.getTempoPermanencia()+" "+ f.getRendaFamiliar());
+//        }
+          ControleFrequentador.pesquisarFreq(txtcampo.getText(), txtinfo.getText());
         
         
         
@@ -188,7 +189,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
         }
         
         
-        List<InfosTabela> tabela2=frdao.tabela2InfosNumeros(tabela);
+        List<InfosTabela> tabela2=ControleFrequentador.tabela2InfosNumeros(tabela);
         for(InfosTabela inf: tabela2){
             System.out.println(inf.getCampo1()+"  "+inf.getCampo2()+"  "+inf.getCampoNumero());
         }
@@ -198,7 +199,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         FrequentadorDAO frdao= new FrequentadorDAO();        
-        List<InfosTabela> tabela=frdao.tabelaFrequenciaIntervalos("TB_FREQUENTADOR_IDADE");
+        List<InfosTabela> tabela=ControleFrequentador.tabelaFrequenciaIntervalos("TB_FREQUENTADOR_IDADE");
         
         DecimalFormat df = new DecimalFormat("##.00");
         
@@ -212,7 +213,7 @@ public class FrmFrequentadorPesquisar extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         FrequentadorDAO frdao= new FrequentadorDAO();        
-        List<InfosTabela> tabela=frdao.tabelaFrequencia("TB_FREQUENTADOR_ESTADO_CIVIL");
+        List<InfosTabela> tabela=ControleFrequentador.tabelaFrequencia("TB_FREQUENTADOR_ESTADO_CIVIL");
         
         DecimalFormat df = new DecimalFormat("##.00");
         
